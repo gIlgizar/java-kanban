@@ -1,14 +1,16 @@
+package model;
+
 public class Task {
-        protected int id;
-        protected String name;
-        protected String description;
-        protected Status status;
+    protected int id;
+    protected String name;
+    protected String description;
+    protected Status status;
 
     public Task(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.status = Status.NEW;
+        this.status=Status.NEW;
     }
 
     public int getId() {
