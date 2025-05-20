@@ -1,4 +1,4 @@
-package model;
+package FZ4.model;
 
 import java.util.ArrayList;
 public class Epic extends Task {
