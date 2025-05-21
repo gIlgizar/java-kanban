@@ -1,6 +1,6 @@
 package FZ4.model;
 
-public enum Status {
+public enum TaskStatus {
     NEW,
     IN_PROGRESS,
     DONE
