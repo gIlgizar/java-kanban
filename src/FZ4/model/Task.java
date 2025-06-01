@@ -1,6 +1,6 @@
 package FZ4.model;
 
-import FZ4.service.TaskManager;
+import FZ4.service.InMemoryTaskManager;
 
 public class Task {
     int id;
@@ -9,7 +9,7 @@ public class Task {
     TaskStatus status;
 
     public Task(String name, String description) {
-        this.id = TaskManager.createId();
+        this.id = InMemoryTaskManager.createId();
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
