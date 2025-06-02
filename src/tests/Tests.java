@@ -1,10 +1,11 @@
 import FZ4.model.*;
 import FZ4.service.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Test {
+public class Tests {
     private TaskManager taskManager;
 
     @BeforeEach
@@ -12,7 +13,7 @@ public class Test {
         taskManager = Managers.getDefault();
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void createAndRetrieveSubtask() {
         Epic epic = new Epic("Epic1", "Epic Desc");
         taskManager.createEpic(epic);
@@ -25,7 +26,7 @@ public class Test {
         assertEquals(epic.getId(), retrieved.getEpicId(), "Epic ID should match");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void deleteEpicAlsoDeletesSubtasks() {
         Epic epic = new Epic("EpicToDelete", "Desc");
         taskManager.createEpic(epic);
@@ -41,41 +42,52 @@ public class Test {
         assertNull(taskManager.getSubtaskById(sub2.getId()), "Subtask 2 should be deleted");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void updateEpicStatusWhenAllSubtasksDone() {
         Epic epic = new Epic("Epic1", "Desc");
         taskManager.createEpic(epic);
 
         Subtask sub1 = new Subtask("Sub1", "Desc1", epic.getId());
-        sub1.setStatus(TaskStatus.DONE);
         Subtask sub2 = new Subtask("Sub2", "Desc2", epic.getId());
-        sub2.setStatus(TaskStatus.DONE);
 
         taskManager.createSubtask(sub1);
         taskManager.createSubtask(sub2);
 
-        taskManager.updateEpicStatus(epic);
-        assertEquals(TaskStatus.DONE, taskManager.getEpicById(epic.getId()).getStatus(), "Epic status should be DONE");
+        sub1.setStatus(TaskStatus.DONE);
+        sub2.setStatus(TaskStatus.DONE);
+        taskManager.updateSubtask(sub1);
+        taskManager.updateSubtask(sub2);
+
+        assertEquals(TaskStatus.DONE, epic.getStatus(), "Epic status should be DONE");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void updateEpicStatusWhenSubtasksInProgress() {
-        Epic epic = new Epic("Epic2", "Desc");
+        Epic epic = new Epic("Test Epic", "Description");
         taskManager.createEpic(epic);
 
-        Subtask sub1 = new Subtask("Sub1", "Desc1", epic.getId());
-        sub1.setStatus(TaskStatus.IN_PROGRESS);
-        Subtask sub2 = new Subtask("Sub2", "Desc2", epic.getId());
-        sub2.setStatus(TaskStatus.NEW);
+        Subtask sub1 = new Subtask("Subtask 1", "Description 1", epic.getId());
+        Subtask sub2 = new Subtask("Subtask 2", "Description 2", epic.getId());
 
         taskManager.createSubtask(sub1);
         taskManager.createSubtask(sub2);
 
-        taskManager.updateEpicStatus(epic);
-        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicById(epic.getId()).getStatus(), "Epic status should be IN_PROGRESS");
+        sub1.setStatus(TaskStatus.IN_PROGRESS);
+        taskManager.updateSubtask(sub1);
+
+        assertEquals(TaskStatus.IN_PROGRESS,
+                taskManager.getEpicById(epic.getId()).getStatus(),
+                "IN_PROGRESS");
+
+        sub2.setStatus(TaskStatus.DONE);
+        taskManager.updateSubtask(sub2);
+
+        assertEquals(TaskStatus.IN_PROGRESS,
+                taskManager.getEpicById(epic.getId()).getStatus(),
+                "IN_PROGRESS");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void deleteSubtaskRemovesFromEpic() {
         Epic epic = new Epic("Epic", "Desc");
         taskManager.createEpic(epic);
@@ -87,14 +99,14 @@ public class Test {
         assertFalse(taskManager.getEpicById(epic.getId()).getSubtasksId().contains(subtask.getId()), "Subtask ID should be removed from epic");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void createIdIncrements() {
         int id1 = InMemoryTaskManager.createId();
         int id2 = InMemoryTaskManager.createId();
         assertTrue(id2 > id1, "второй id больше первого");
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void idNotUpdateWhenUpdateTask() {
         Task task = new Task("Task", "Desc");
         taskManager.createTask(task);

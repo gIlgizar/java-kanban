@@ -4,7 +4,6 @@ import FZ4.model.Epic;
 import FZ4.model.Subtask;
 import FZ4.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -25,7 +24,7 @@ public interface TaskManager {
 
     List<Epic> getAllEpics();
 
-    ArrayList<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks();
 
     void deleteAllEpics();
 
@@ -48,4 +47,6 @@ public interface TaskManager {
     Subtask deleteSubtaskById(int id);
 
     List<Task> getHistory();
+
+
 }
