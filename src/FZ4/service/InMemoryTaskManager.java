@@ -5,16 +5,33 @@ import FZ4.model.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Subtask> subtasks = new HashMap<>();
     private static int nextId = 0;
     private HistoryManager historyManager = Managers.getDefaultHistory();
 
     public static int createId() {
         return nextId++;
+    }
+    @Override
+    public List<Subtask> getSubtasksByEpicId(int epicId) {
+        Epic epic = epics.get(epicId);
+        if (epic == null) {
+            throw new IllegalArgumentException("Эпик не найден");
+        }
+
+        List<Subtask> result = new ArrayList<>();
+        for (Integer subtaskId : epic.getSubtasksId()) {
+            Subtask subtask = subtasks.get(subtaskId);
+            if (subtask != null) {
+                result.add(subtask);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -139,7 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
-    @Override
+
     public void updateEpicStatus(Epic epic) {
         ArrayList<Integer> subtaskIds = epic.getSubtasksId();
         if (subtaskIds.isEmpty()) {
@@ -170,6 +187,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return historyManager.getHistory(); // Получаем историю из HistoryManager
+        return historyManager.getHistory();
     }
 }

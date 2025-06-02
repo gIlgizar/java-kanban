@@ -1,10 +1,10 @@
 import FZ4.model.*;
 import FZ4.service.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class test {
+public class Test {
     private TaskManager taskManager;
 
     @BeforeEach
@@ -12,7 +12,7 @@ public class test {
         taskManager = Managers.getDefault();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void createAndRetrieveSubtask() {
         Epic epic = new Epic("Epic1", "Epic Desc");
         taskManager.createEpic(epic);
@@ -25,7 +25,7 @@ public class test {
         assertEquals(epic.getId(), retrieved.getEpicId(), "Epic ID should match");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void deleteEpicAlsoDeletesSubtasks() {
         Epic epic = new Epic("EpicToDelete", "Desc");
         taskManager.createEpic(epic);
@@ -41,7 +41,7 @@ public class test {
         assertNull(taskManager.getSubtaskById(sub2.getId()), "Subtask 2 should be deleted");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void updateEpicStatusWhenAllSubtasksDone() {
         Epic epic = new Epic("Epic1", "Desc");
         taskManager.createEpic(epic);
@@ -58,7 +58,7 @@ public class test {
         assertEquals(TaskStatus.DONE, taskManager.getEpicById(epic.getId()).getStatus(), "Epic status should be DONE");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void updateEpicStatusWhenSubtasksInProgress() {
         Epic epic = new Epic("Epic2", "Desc");
         taskManager.createEpic(epic);
@@ -75,7 +75,7 @@ public class test {
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicById(epic.getId()).getStatus(), "Epic status should be IN_PROGRESS");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void deleteSubtaskRemovesFromEpic() {
         Epic epic = new Epic("Epic", "Desc");
         taskManager.createEpic(epic);
@@ -87,14 +87,14 @@ public class test {
         assertFalse(taskManager.getEpicById(epic.getId()).getSubtasksId().contains(subtask.getId()), "Subtask ID should be removed from epic");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void createIdIncrements() {
         int id1 = InMemoryTaskManager.createId();
         int id2 = InMemoryTaskManager.createId();
         assertTrue(id2 > id1, "второй id больше первого");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void idNotUpdateWhenUpdateTask() {
         Task task = new Task("Task", "Desc");
         taskManager.createTask(task);
